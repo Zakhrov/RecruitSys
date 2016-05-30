@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr;
+package servlets;
 
 import db.Database;
 import java.io.IOException;
@@ -22,8 +22,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author aaron
  */
-@WebServlet(name = "AddJobServlet", urlPatterns = {"/AddJobServlet"})
-public class AddJobServlet extends HttpServlet {
+@WebServlet(name = "ApplyJob", urlPatterns = {"/ApplyJob"})
+public class ApplyJob extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,20 +40,18 @@ public class AddJobServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             Database db=new Database();
-            PreparedStatement AddnewJob=db.conn.prepareStatement("insert into jobs(job_min_qual,job_name,job_cat,job_desc) Values(?,?,?,?)");
-            AddnewJob.setString(1, request.getParameter("job_qual"));
-            AddnewJob.setString(2, request.getParameter("job_name"));
-            AddnewJob.setString(3, request.getParameter("job_cat"));
-            AddnewJob.setString(4, request.getParameter("job_desc"));
-            AddnewJob.executeUpdate();
-            response.sendRedirect("HR/Landing.jsp");
+            PreparedStatement apply=db.conn.prepareStatement("insert into applied_jobs(job_id,user_id) values(?,?)");
+            apply.setString(1, request.getParameter("job_id"));
+            apply.setString(2, request.getSession().getAttribute("user_id").toString());
+            apply.executeUpdate();
+            response.sendRedirect("MyJobs.jsp");
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddJobServlet</title>");            
+            out.println("<title>Servlet ApplyJob</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddJobServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ApplyJob at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -74,9 +72,9 @@ public class AddJobServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyJob.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyJob.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -94,9 +92,9 @@ public class AddJobServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyJob.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyJob.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

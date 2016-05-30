@@ -12,7 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="UploadResumeServlet" method="post">
+        <form action="UploadResumeServlet" method="post" enctype="multipart/form-data">
             <label>Upload Resume (.docx format only) </label><input type="file" name="resume">
             <button type="submit">upload resume</button>
         </form>

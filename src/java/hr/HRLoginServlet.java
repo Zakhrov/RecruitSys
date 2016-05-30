@@ -9,6 +9,7 @@ import db.Database;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,13 +18,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author aaron
  */
-@WebServlet(name = "AddJobServlet", urlPatterns = {"/AddJobServlet"})
-public class AddJobServlet extends HttpServlet {
+@WebServlet(name = "HRLoginServlet", urlPatterns = {"/HRLoginServlet"})
+public class HRLoginServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,21 +41,29 @@ public class AddJobServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            Database db=new Database();
-            PreparedStatement AddnewJob=db.conn.prepareStatement("insert into jobs(job_min_qual,job_name,job_cat,job_desc) Values(?,?,?,?)");
-            AddnewJob.setString(1, request.getParameter("job_qual"));
-            AddnewJob.setString(2, request.getParameter("job_name"));
-            AddnewJob.setString(3, request.getParameter("job_cat"));
-            AddnewJob.setString(4, request.getParameter("job_desc"));
-            AddnewJob.executeUpdate();
-            response.sendRedirect("HR/Landing.jsp");
+                        Database db=new Database();
+            PreparedStatement LoginUser=db.conn.prepareStatement("select hr_id from hr where hr_email=? and hr_password=?");
+            LoginUser.setString(1, request.getParameter("user_email"));
+            LoginUser.setString(2, request.getParameter("user_password"));
+            ResultSet users=LoginUser.executeQuery();
+            if(users.first())
+            {
+                HttpSession session=request.getSession();
+                session.setAttribute("hr_id", users.getString("hr_id"));
+                response.sendRedirect("HR/Landing.jsp");
+                
+            }
+            else
+            {
+                response.sendRedirect("Login.jsp?err=1");
+            }
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddJobServlet</title>");            
+            out.println("<title>Servlet HRLoginServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddJobServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet HRLoginServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -74,9 +84,9 @@ public class AddJobServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HRLoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HRLoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -94,9 +104,9 @@ public class AddJobServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HRLoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(HRLoginServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

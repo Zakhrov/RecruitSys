@@ -12,9 +12,10 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="AddJobServlet" method="post">
+        <form action="../AddJobServlet" method="post">
             <label>Name</label><input type="text" name="job_name" required>
             <label>Minimum Qualification</label><input type="text" name="job_qual" required>
+            <label>Category</label><input type="text" name="job_cat" required>
             <label>Description</label><textarea name="job_desc" ></textarea>
             <button type="submit">Add Job</button>
         </form>

@@ -3,15 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hr;
+package servlets;
 
-import db.Database;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,8 +17,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author aaron
  */
-@WebServlet(name = "AddJobServlet", urlPatterns = {"/AddJobServlet"})
-public class AddJobServlet extends HttpServlet {
+@WebServlet(name = "Logout", urlPatterns = {"/Logout"})
+public class Logout extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,25 +30,20 @@ public class AddJobServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            Database db=new Database();
-            PreparedStatement AddnewJob=db.conn.prepareStatement("insert into jobs(job_min_qual,job_name,job_cat,job_desc) Values(?,?,?,?)");
-            AddnewJob.setString(1, request.getParameter("job_qual"));
-            AddnewJob.setString(2, request.getParameter("job_name"));
-            AddnewJob.setString(3, request.getParameter("job_cat"));
-            AddnewJob.setString(4, request.getParameter("job_desc"));
-            AddnewJob.executeUpdate();
-            response.sendRedirect("HR/Landing.jsp");
+            request.getSession().removeAttribute("user_id");
+            request.getSession().invalidate();
+            response.sendRedirect("index.html");
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddJobServlet</title>");            
+            out.println("<title>Servlet Logout</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddJobServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Logout at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -71,13 +61,7 @@ public class AddJobServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -91,13 +75,7 @@ public class AddJobServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            processRequest(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        processRequest(request, response);
     }
 
     /**

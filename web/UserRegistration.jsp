@@ -16,6 +16,7 @@
             <label>Name</label><input type="text" name="uname" required>
             <label>Email</label><input type="email" name="uemail" required>
             <label>Password</label><input type="password" name="upassword" required>
+            <button type="submit">Register</button>
         </form>
     </body>
 </html>
