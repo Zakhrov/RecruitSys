@@ -17,7 +17,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <a href="Logout">Logout</a>
+        <ul>
+            <li><a href="index.jsp">Home</a></li>
+            <li><a href="Logout">Logout</a></li>
+        </ul>
+        
+        
         <h1>MyJobs</h1>
        <% Database db=new Database();
             PreparedStatement GetJobs=db.conn.prepareStatement("select job_name, applied_status from jobs inner join applied_jobs on jobs.job_id=applied_jobs.job_id where applied_jobs.user_id=?");

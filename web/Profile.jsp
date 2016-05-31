@@ -26,6 +26,7 @@
         <ul>
             <li><a href="index.jsp">Home</a></li>
             <li><a href="PostResume.jsp">Upload Resume</a></li>
+            <li> <a href="MyJobs.jsp">My Jobs</a></li>
         </ul>
     </body>
 </html>

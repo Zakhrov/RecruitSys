@@ -15,17 +15,19 @@
         <title>JSP Page</title>
     </head>
     <body>
+        
         <% Database db=new Database();
-            PreparedStatement GetJobs=db.conn.prepareStatement("select * from jobs where job_desc LIKE ? or job_name LIKE ?");
-            GetJobs.setString(1, "%"+request.getParameter("search_term")+"%");
+            PreparedStatement GetJobs=db.conn.prepareStatement("select * from jobs where job_id not in (select job_id from applied_jobs where user_id=? ) and (job_desc LIKE ? or job_name LIKE ?)");
+            GetJobs.setString(1, request.getSession().getAttribute("user_id").toString());
             GetJobs.setString(2, "%"+request.getParameter("search_term")+"%");
+            GetJobs.setString(3, "%"+request.getParameter("search_term")+"%");
             ResultSet JobSet=GetJobs.executeQuery();
         %>
         <ul>
             <% if(request.getSession().getAttribute("user_id")!=null)
                    { %>
-            <li>My Jobs</li>
-            <li>Logout</li>
+                   <li><a href="MyJobs.jsp">My Jobs</a></li>
+                   <li><a href="Logout">Logout</a></li>
             <% }
                 else{
             %>

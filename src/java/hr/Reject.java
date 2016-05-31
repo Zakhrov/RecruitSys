@@ -5,6 +5,7 @@
  */
 package hr;
 
+import classes.Notifier;
 import db.Database;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,8 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author aaron
  */
-@WebServlet(name = "AddJobServlet", urlPatterns = {"/AddJobServlet"})
-public class AddJobServlet extends HttpServlet {
+@WebServlet(name = "Reject", urlPatterns = {"/Reject"})
+public class Reject extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,22 +40,21 @@ public class AddJobServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            Database db=new Database();
-            PreparedStatement AddnewJob=db.conn.prepareStatement("insert into jobs(job_min_qual,job_name,job_cat,job_desc,hr_id) Values(?,?,?,?,?)");
-            AddnewJob.setString(1, request.getParameter("job_qual"));
-            AddnewJob.setString(2, request.getParameter("job_name"));
-            AddnewJob.setString(3, request.getParameter("job_cat"));
-            AddnewJob.setString(4, request.getParameter("job_desc"));
-            AddnewJob.setString(5, request.getSession().getAttribute("hr_id").toString());
-            AddnewJob.executeUpdate();
-            response.sendRedirect("HR/Landing.jsp");
+             Database db=new Database();
+            PreparedStatement ShortCan=db.conn.prepareStatement("update applied_jobs set applied_status='3' where job_id=? and user_id=?");
+            ShortCan.setString(1, request.getParameter("job_id"));
+            ShortCan.setString(2,request.getParameter("user_id"));
+            ShortCan.executeUpdate();
+            Notifier nf=new Notifier();
+            nf.NotifyReject(request.getParameter("user_id"), request.getParameter("job_id"));
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet AddJobServlet</title>");            
+            out.println("<title>Servlet Reject</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet AddJobServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Reject at " + request.getContextPath() + "</h1>");
+             out.println("<a href='HR/Landing.jsp'>Back</a>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -75,9 +75,9 @@ public class AddJobServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Reject.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Reject.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -95,9 +95,9 @@ public class AddJobServlet extends HttpServlet {
         try {
             processRequest(request, response);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Reject.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(AddJobServlet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Reject.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

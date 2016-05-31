@@ -52,7 +52,7 @@ public class LoginServlet extends HttpServlet {
             {
                 HttpSession session=request.getSession();
                 session.setAttribute("user_id", users.getString("user_id"));
-                response.sendRedirect("PostResume.jsp");
+                response.sendRedirect("Profile.jsp");
                 
             }
             else

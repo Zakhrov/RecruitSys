@@ -17,7 +17,8 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <a href="Landing.jsp">Home</a>
+        <h1>Posted Jobs</h1>
         <% Database db=new Database();
             PreparedStatement GetJobs=db.conn.prepareStatement("select job_id, job_name from jobs where jobs.hr_id=?");
             GetJobs.setString(1, request.getSession().getAttribute("hr_id").toString());
