@@ -26,9 +26,9 @@ import javax.mail.internet.MimeMessage;
  */
 public class Notifier {
     
-    static String ServerEmail="aaron.zakhrov@gmail.com";
+    static String ServerEmail="name@gmail.com";
     static String ServerName="smtp.gmail.com";
-    static String ServerPassword="sr71xb35";
+    static String ServerPassword="gmailpasssword";
     Session session;
     public Notifier()
     {
