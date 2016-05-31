@@ -22,6 +22,8 @@ public class JStatusParser {
             
             case 2: return "Shortlisted";
             
+            case 3: return "Rejected";
+            
             
         }
         return  null;

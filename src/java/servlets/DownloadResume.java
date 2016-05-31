@@ -7,7 +7,11 @@ package servlets;
 
 import db.Database;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.sql.Blob;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,11 +36,47 @@ public class DownloadResume extends HttpServlet {
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        
         Database db=new Database();
+        PreparedStatement GetCV=db.conn.prepareStatement("select user_cv from users where user_id=?");
+        GetCV.setString(1,request.getParameter("user_id"));
+        ResultSet CVrs=GetCV.executeQuery();
+        if(CVrs.first())
+        {
+            response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            response.setHeader("Content-Disposition", "attachment; filename=" + request.getParameter("user_id")+".docx");
+            Blob CVblob=CVrs.getBlob("user_cv");
+            OutputStream CVfs=response.getOutputStream();
+            CVfs.write(CVblob.getBytes(1, (int)CVblob.length()));
+            CVfs.flush();
+            PreparedStatement SetStatus=db.conn.prepareStatement("update applied_jobs set applied_status='1' where job_id=? and user_id=?");
+            SetStatus.setString(1, request.getParameter("job_id"));
+            SetStatus.setString(2, request.getParameter("user_id"));
+            SetStatus.executeUpdate();
+            
+            
+        }
+        else
+        {
+            response.setContentType("text/html");
+            PrintWriter out=response.getWriter();
+             out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet LoginServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1> No Resume available</h1>");
+            out.println("</body>");
+            out.println("</html>");
+            
+        }
+        
         
     }
 

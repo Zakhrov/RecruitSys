@@ -15,6 +15,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <a href="Landing.jsp">Home</a>
         <% Database db=new Database();
             PreparedStatement GetJobs=db.conn.prepareStatement("select user_name,users.user_id from users inner join applied_jobs on applied_jobs.user_id=users.user_id and applied_jobs.job_id=?");
             GetJobs.setString(1, request.getParameter("job_id"));
@@ -31,8 +32,19 @@
                <tr>
                            <td><%=JobSet.getString("user_name")%></td><td><form action="../DownloadResume" method="post">
                                    <input type="hidden" name="user_id" value="<%=JobSet.getString("users.user_id")%>">
+                                   <input type="hidden" name="job_id" value="<%=request.getParameter("job_id")%>">
                                    <button type="submit">Download Resume</button>
-                       </form></td>
+                               </form><form action="../Shortlist" method="post">
+                                   <input type="hidden" name="user_id" value="<%=JobSet.getString("users.user_id")%>">
+                                   <input type="hidden" name="job_id" value="<%=request.getParameter("job_id")%>">
+                                   <button type="submit">Shortlist</button>
+                               </form>
+                                   </form><form action="../Reject" method="post">
+                                   <input type="hidden" name="user_id" value="<%=JobSet.getString("users.user_id")%>">
+                                   <input type="hidden" name="job_id" value="<%=request.getParameter("job_id")%>">
+                                   <button type="submit">Reject</button>
+                               </form>
+                           </td>
                </tr>
             <% 
             }%>
